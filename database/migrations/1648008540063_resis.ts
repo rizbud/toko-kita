@@ -14,13 +14,6 @@ export default class Resis extends BaseSchema {
         .inTable('transactions')
         .onDelete('CASCADE')
         .notNullable()
-      table
-        .integer('courier_id')
-        .unsigned()
-        .references('id')
-        .inTable('couriers')
-        .onDelete('CASCADE')
-        .notNullable()
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

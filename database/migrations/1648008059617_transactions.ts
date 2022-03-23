@@ -22,13 +22,6 @@ export default class Transactions extends BaseSchema {
         .onDelete('CASCADE')
         .notNullable()
       table
-        .integer('category_id')
-        .unsigned()
-        .references('id')
-        .inTable('categories')
-        .onDelete('CASCADE')
-        .notNullable()
-      table
         .integer('address_id')
         .unsigned()
         .references('id')
