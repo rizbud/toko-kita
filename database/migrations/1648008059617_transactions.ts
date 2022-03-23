@@ -5,8 +5,8 @@ export default class Transactions extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
-      table.string('code', 32).notNullable()
+      table.increments('id').primary()
+      table.string('code', 32).unique().notNullable()
       table
         .integer('user_id')
         .unsigned()
