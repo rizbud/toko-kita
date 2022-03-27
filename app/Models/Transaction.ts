@@ -7,16 +7,16 @@ export default class Transaction extends BaseModel {
   public id: number
 
   @column()
-  public userId: number
+  public user_id: number
 
   @column()
-  public productId: number
+  public product_id: number
 
   @column()
-  public addressId: number
+  public address_id: number
 
   @column()
-  public courierId: number
+  public courier_id: number
 
   @column()
   public quantity: number

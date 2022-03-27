@@ -7,7 +7,7 @@ export default class Address extends BaseModel {
   public id: number
 
   @column()
-  public userId: number
+  public user_id: number
 
   @column()
   public name: string
@@ -22,7 +22,7 @@ export default class Address extends BaseModel {
   public district: string
 
   @column()
-  public postalCode: string
+  public postal_code: string
 
   @column()
   public address: string

@@ -35,9 +35,17 @@ Route.group(() => {
   }).prefix('auth')
 
   Route.group(() => {
-    Route.get('me', 'UsersController.me')
-    Route.patch('update', 'UsersController.update')
-  })
-    .prefix('user')
-    .middleware('auth:api')
+    Route.group(() => {
+      Route.get('me', 'UsersController.me')
+      Route.patch('update', 'UsersController.update')
+    }).prefix('user')
+
+    Route.group(() => {
+      Route.get('/', 'AddressesController.index')
+      Route.post('/', 'AddressesController.store')
+      Route.get('/:id', 'AddressesController.show')
+      Route.patch('/:id', 'AddressesController.update')
+      Route.delete('/:id', 'AddressesController.destroy')
+    }).prefix('address')
+  }).middleware('auth:api')
 }).prefix('api')

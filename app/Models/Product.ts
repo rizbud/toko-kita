@@ -13,7 +13,7 @@ export default class Product extends BaseModel {
   public description: string
 
   @column()
-  public categoryId: number
+  public category_id: number
 
   @column()
   public price: number
