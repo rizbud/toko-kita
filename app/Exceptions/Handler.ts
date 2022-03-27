@@ -56,7 +56,13 @@ export default class ExceptionHandler extends HttpExceptionHandler {
         )
 
       default:
-        return super.handle(error, ctx)
+        // return super.handle(error, ctx)
+        return ctx.response.api(
+          {
+            message: error?.message,
+          },
+          StatusCodes.INTERNAL_SERVER_ERROR
+        )
     }
   }
 

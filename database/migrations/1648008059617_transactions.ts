@@ -36,7 +36,12 @@ export default class Transactions extends BaseSchema {
         .onDelete('CASCADE')
         .notNullable()
       table.integer('quantity').notNullable()
-      table.enum('status', ['WAITING_PAYMENT', 'PAID', 'PACKED', 'SENT', 'DONE']).notNullable()
+      table.string('midtrans_token').nullable()
+      table.string('midtrans_redirect_url').nullable()
+      table
+        .enum('status', ['WAITING_PAYMENT', 'PAID', 'PACKED', 'SENT', 'DONE', 'FAILURE'])
+        .notNullable()
+        .defaultTo('WAITING_PAYMENT')
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

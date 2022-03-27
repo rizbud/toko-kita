@@ -24,6 +24,8 @@ Route.get('/', async () => {
   return { name: 'toko_kita' }
 })
 
+Route.post('/midtrans-notification', 'MidtransNotificationsController.index')
+
 Route.group(() => {
   Route.get('/', async () => {
     return { name: 'toko_kita api' }
@@ -49,8 +51,14 @@ Route.group(() => {
     }).prefix('address')
 
     Route.group(() => {
-      Route.get('/', 'ProductsController.index')
-      Route.get('/:id', 'ProductsController.show')
-    }).prefix('products')
+      Route.get('/', 'TransactionsController.index')
+      Route.get('/:id', 'TransactionsController.show')
+      Route.post('/', 'TransactionsController.store')
+    }).prefix('transactions')
   }).middleware('auth:api')
+
+  Route.group(() => {
+    Route.get('/', 'ProductsController.index')
+    Route.get('/:id', 'ProductsController.show')
+  }).prefix('products')
 }).prefix('api')

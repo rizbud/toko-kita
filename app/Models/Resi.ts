@@ -9,7 +9,7 @@ export default class Resi extends BaseModel {
   public resi_number: string
 
   @column()
-  public transaction_id: number
+  public transactionId: number
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
