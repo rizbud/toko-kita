@@ -33,4 +33,11 @@ Route.group(() => {
     Route.post('login', 'AuthController.login')
     Route.post('register', 'AuthController.register')
   }).prefix('auth')
+
+  Route.group(() => {
+    Route.get('me', 'UsersController.me')
+    Route.patch('update', 'UsersController.update')
+  })
+    .prefix('user')
+    .middleware('auth:api')
 }).prefix('api')

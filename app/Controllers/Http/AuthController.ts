@@ -11,7 +11,7 @@ export default class AuthController {
 
     if (email) {
       try {
-        const token = await auth.attempt(req.email, req.password, {
+        const token = await auth.use('api').attempt(req.email, req.password, {
           expiresIn: '30 days',
         })
         return response.api(token.toJSON(), StatusCodes.OK)
@@ -33,24 +33,16 @@ export default class AuthController {
     }
   }
 
-  public async register({ request, auth, response }: HttpContextContract) {
+  public async register({ request, response }: HttpContextContract) {
     const req = await request.validate(RegisterValidator)
     const checkUser = await User.findBy('email', req.email)
 
     if (checkUser) {
-      return response.api({ message: 'Email already exists' }, StatusCodes.BAD_REQUEST)
+      return response.api({ message: 'Email already exists' }, StatusCodes.UNPROCESSABLE_ENTITY)
     }
 
-    const user = await User.create({ email: req.email, password: req.password, name: req.name })
-    const token = await auth.use('api').generate(user)
+    await User.create({ email: req.email, password: req.password, name: req.name })
 
-    return response.api(
-      {
-        name: req.name,
-        email: req.email,
-        token: token.toJSON(),
-      },
-      StatusCodes.CREATED
-    )
+    return response.status(StatusCodes.CREATED)
   }
 }

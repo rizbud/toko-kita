@@ -19,16 +19,55 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { StatusCodes } from 'http-status-codes'
 
 export default class ExceptionHandler extends HttpExceptionHandler {
+  protected statusPages = {
+    '403': 'errors/unauthorized',
+    '404': 'errors/not-found',
+    '500..599': 'errors/server-error',
+  }
+
   constructor() {
     super(Logger)
   }
 
-  public async handle(error: any, ctx: HttpContextContract) {
-    if (error?.code === 'E_ROUTE_NOT_FOUND') {
-      return ctx.response.status(error.status ?? StatusCodes.NOT_FOUND).json({
-        message: 'Not Found',
-      })
+  private async jsonHandle(error: any, ctx: HttpContextContract): Promise<void> {
+    switch (error.code) {
+      case 'E_VALIDATION_FAILURE':
+        return ctx.response.api(
+          {
+            message: error.messages.errors?.map((msg: any) => msg.message),
+          },
+          StatusCodes.BAD_REQUEST
+        )
+
+      case 'E_ROW_NOT_FOUND':
+        return ctx.response.api(
+          {
+            message: 'Data tidak ditemukan',
+          },
+          StatusCodes.NOT_FOUND
+        )
+
+      case 'E_ROUTE_NOT_FOUND':
+        return ctx.response.api(
+          {
+            message: 'Not found',
+          },
+          StatusCodes.NOT_FOUND
+        )
+
+      default:
+        return super.handle(error, ctx)
     }
-    return super.handle(error, ctx)
+  }
+
+  public async handle(error: any, ctx: HttpContextContract) {
+    switch (ctx.request.accepts(['html', 'json'])) {
+      case 'json':
+        this.jsonHandle(error, ctx)
+        break
+
+      default:
+        return super.handle(error, ctx)
+    }
   }
 }

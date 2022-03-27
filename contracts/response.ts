@@ -1,4 +1,4 @@
-type ResponseData = object
+type ResponseData = object | null
 type ResponseCode = number
 
 declare module '@ioc:Adonis/Core/Response' {
