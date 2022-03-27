@@ -47,5 +47,10 @@ Route.group(() => {
       Route.patch('/:id', 'AddressesController.update')
       Route.delete('/:id', 'AddressesController.destroy')
     }).prefix('address')
+
+    Route.group(() => {
+      Route.get('/', 'ProductsController.index')
+      Route.get('/:id', 'ProductsController.show')
+    }).prefix('products')
   }).middleware('auth:api')
 }).prefix('api')
