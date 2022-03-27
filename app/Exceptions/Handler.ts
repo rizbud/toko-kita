@@ -15,9 +15,65 @@
 
 import Logger from '@ioc:Adonis/Core/Logger'
 import HttpExceptionHandler from '@ioc:Adonis/Core/HttpExceptionHandler'
+import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { StatusCodes } from 'http-status-codes'
 
 export default class ExceptionHandler extends HttpExceptionHandler {
+  protected statusPages = {
+    '403': 'errors/unauthorized',
+    '404': 'errors/not-found',
+    '500..599': 'errors/server-error',
+  }
+
   constructor() {
     super(Logger)
+  }
+
+  private async jsonHandle(error: any, ctx: HttpContextContract): Promise<void> {
+    switch (error.code) {
+      case 'E_VALIDATION_FAILURE':
+        return ctx.response.api(
+          {
+            message: error.messages.errors?.map((msg: any) => msg?.message),
+          },
+          StatusCodes.UNPROCESSABLE_ENTITY
+        )
+
+      case 'E_ROW_NOT_FOUND':
+        return ctx.response.api(
+          {
+            message: 'Data tidak ditemukan',
+          },
+          StatusCodes.NOT_FOUND
+        )
+
+      case 'E_ROUTE_NOT_FOUND':
+        return ctx.response.api(
+          {
+            message: 'Not found',
+          },
+          StatusCodes.NOT_FOUND
+        )
+
+      default:
+        // return super.handle(error, ctx)
+        return ctx.response.api(
+          {
+            message: error?.message,
+          },
+          StatusCodes.INTERNAL_SERVER_ERROR
+        )
+    }
+  }
+
+  public async handle(error: any, ctx: HttpContextContract) {
+    switch (ctx.request.accepts(['html', 'json'])) {
+      case 'json':
+        this.jsonHandle(error, ctx)
+        break
+
+      default:
+        return super.handle(error, ctx)
+    }
   }
 }
