@@ -34,9 +34,9 @@ export default class ExceptionHandler extends HttpExceptionHandler {
       case 'E_VALIDATION_FAILURE':
         return ctx.response.api(
           {
-            message: error.messages.errors?.map((msg: any) => msg.message),
+            message: error.messages.errors?.map((msg: any) => msg?.message),
           },
-          StatusCodes.BAD_REQUEST
+          StatusCodes.UNPROCESSABLE_ENTITY
         )
 
       case 'E_ROW_NOT_FOUND':
